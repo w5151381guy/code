@@ -2,10 +2,10 @@
 #include <string>
 #include <vector>
 using namespace std;
-void OPT(vector<string> str){
+void OPT(vector<string> str,int frame){
 
 }
-void LRU(vector<string> str){
+void LRU(vector<string> str,int frame){
 
 }
 int main(int argc,char *argv[]){
@@ -18,8 +18,8 @@ int main(int argc,char *argv[]){
     str.push_back(input);
   }
   if(argv[1] == 0)
-    OPT(str);
+    OPT(str,frame);
   else
-    LRU(str);
+    LRU(str,frame);
   return 0;
 }

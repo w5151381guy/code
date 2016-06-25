@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <fstream>
+#include <cstdlib>
 using namespace std;
 void OPT(vector<string> str,int frame){
   vector<string> str1;              //vector to compare every page
@@ -86,15 +88,16 @@ void LRU(vector<string> str,int frame){
   }
 }
 int main(int argc,char *argv[]){
+  fstream file;
+  file.open(argv[2],ios::in);
   string input;
   vector<string> str;        //vector string for input
   int length,frame;          //length = reference string length
-  cin >> length >> frame;
-  for(int i = 0 ; i < length ; i++){
-    cin >> input;
+  file >> length >> frame;
+  while(file >> input)
     str.push_back(input);
-  }
-  if(argv[1] == 0)
+  int mode = atoi(argv[1]);
+  if(mode == 0)
     OPT(str,frame);
   else
     LRU(str,frame);

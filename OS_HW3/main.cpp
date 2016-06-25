@@ -96,6 +96,7 @@ int main(int argc,char *argv[]){
   file >> length >> frame;
   while(file >> input)
     str.push_back(input);
+  file.close();
   int mode = atoi(argv[1]);
   if(mode == 0)
     OPT(str,frame);

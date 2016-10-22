@@ -53,4 +53,69 @@
 #define DIVI_ASSIGN 53      // /=
 #define REMAIN_ASSIGN 54    // %=
 %}
+
 /*regular definition*/
+Digit [0-9]
+Letter [a-zA-Z]
+Name {Letter}{Letter}*
+IntLit {Digit}+
+Id {Letter}({Letter}|{Digit}|_)*
+%%
+
+/*name definition*/
+[ \t\n]              {/* skip white spaces */}
+{Name}               {return(ID)};
+{Id} {
+       printf("var has %d characters, ",yyleng);
+       return(ID);
+     }
+\"[^\"\n]*\" {stripquotes(); return(STRING);}
+
+/*delimiter definition*/
+","                  {return(comma);}
+";"                  {return(semicolon);}
+"("                  {return(left_parenthesis);}
+")"                  {return(right_parenthesis);}
+
+/*operator definition*/
+":="                 {return(ASSIGNMENT);}
+"+"                  {return(ADDITION);}
+"-"                  {return(SUBTRACTION);}
+"*"                  {return(MULTIPLICATION);}
+"/"                  {return(DIVISION);}
+"!="                 {return(NOT_EQUAL);}
+">"                  {return(GREATER_THAN);}
+"<"                  {return(LESS_THAN);}
+">="                 {return(GREATER_OR_EQUAL);}
+"<="                 {return(LESS_OR_EQUAL);}
+"=="                 {return(EQUAL);}
+"++"                 {return(INCREMENT);}
+"--"                 {return(DECREMENT);}
+"%"                  {return(REMAINDER);}
+"&&"                 {return(AND);}
+"||"                 {return(OR);}
+"!"                  {return(NOT);}
+"+="                 {return(ADD_ASSIGN);}
+"-="                 {return(SUB_ASSIGN);}
+"*="                 {return(MULTI_ASSIGN);}
+":="                 {return(DIVI_ASSIGN);}
+":="                 {return(REMAIN_ASSIGN);}
+
+/*integer definition*/
+{IntLit}             {return(INTEGER_LITERAL);}
+({IntLit}[.]{IntLit})([Ee][+-]?{IntLit})? {return(EXPONENTIAL);}
+({IntLit}[.]{IntLit})? {return(FLOAT);}
+
+/*c program*/
+stripquotes()
+{
+  /* handling string within a quoted string */
+  int frompos, topos=0, numquotes = 2;
+  for(frompos=1; frompos<yyleng; frompos++){
+    yytext[topos++] = yytext[frompos];
+  }
+  yyleng -= numquotes;
+  yytext[yyleng] = ’\0’;
+}
+
+/*main function*/

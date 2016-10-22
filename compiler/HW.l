@@ -142,3 +142,11 @@ stripquotes()
 }
 
 /*main function*/
+void main(){
+  int i;
+  i = yylex();
+  while (i>0 && i < 55) {
+    printf("Token number:%d,value:"%s",line %d.",i,yytext,yylineno);
+    i = yylex();
+  }
+}

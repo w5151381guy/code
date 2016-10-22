@@ -9,7 +9,7 @@
 #define semicolon 7
 #define left_parenthesis 8
 #define right_parenthesis 9
-#define BEGIN 10
+#define BEGINSYM 10
 #define END 11
 #define READ 12
 #define WRITE 13
@@ -54,16 +54,26 @@
 #define REMAIN_ASSIGN 54    // %=
 %}
 
-/*regular definition*/
+/*regular expression*/
 Digit [0-9]
 Letter [a-zA-Z]
 Name {Letter}{Letter}*
 IntLit {Digit}+
 Id {Letter}({Letter}|{Digit}|_)*
+%x Comment1
+%x Comment2
 %%
 
-/*keyword definition*/
-[Bb][Ee][Gg][Ii][Nn]                  {return(BEGIN);}
+%option yylineno;
+\n {yylineno++;}
+"%%" {BEGIN Comment1;}
+"{%" {BEGIN Comment2;}
+<Comment1>\n                          {yylineno++; BEGIN INITIAL;}
+<Comment1>.                           {}
+<Comment2>\n                          {yylineno++;}
+<Comment2>.                           {}
+<Comment2>"%}"                        {BEGIN INITIAL;}
+[Bb][Ee][Gg][Ii][Nn]                  {return(BEGINSYM);}
 [Ee][Nn][Dd]                          {return(END);}
 [Rr][Ee][Aa][Dd]                      {return(READ);}
 [Ww][Rr][Ii][Tt][Ee]                  {return(WRITE);}
@@ -85,22 +95,19 @@ Id {Letter}({Letter}|{Digit}|_)*
 [Bb][Oo][Oo][Ll]                      {return(BOOL);}
 [Ss][Cc][Aa][Nn][Ee][Oo][Ff]          {return(SCANEOF);}
 
-/*name definition*/
+
 [ \t\n]              {/* skip white spaces */}
-{Name}               {return(ID)};
-{Id} {
-       printf("var has %d characters, ",yyleng);
-       return(ID);
-     }
+{Name}               {return(ID);}
+{Id}                 {return(ID);}
 \"[^\"\n]*\" {stripquotes(); return(STRING);}
 
-/*delimiter definition*/
+
 ","                  {return(comma);}
 ";"                  {return(semicolon);}
 "("                  {return(left_parenthesis);}
 ")"                  {return(right_parenthesis);}
 
-/*operator definition*/
+
 ":="                 {return(ASSIGNMENT);}
 "+"                  {return(ADDITION);}
 "-"                  {return(SUBTRACTION);}
@@ -121,13 +128,13 @@ Id {Letter}({Letter}|{Digit}|_)*
 "+="                 {return(ADD_ASSIGN);}
 "-="                 {return(SUB_ASSIGN);}
 "*="                 {return(MULTI_ASSIGN);}
-":="                 {return(DIVI_ASSIGN);}
-":="                 {return(REMAIN_ASSIGN);}
+"/="                 {return(DIVI_ASSIGN);}
+"%="                 {return(REMAIN_ASSIGN);}
 
-/*integer definition*/
 {IntLit}             {return(INTEGER_LITERAL);}
 ({IntLit}[.]{IntLit})([Ee][+-]?{IntLit})? {return(EXPONENTIAL);}
-({IntLit}[.]{IntLit}) {return(FLOAT);}
+({IntLit}[.]{IntLit})? {return(FLOAT);}
+%%
 
 /*c program*/
 stripquotes()
@@ -138,15 +145,15 @@ stripquotes()
     yytext[topos++] = yytext[frompos];
   }
   yyleng -= numquotes;
-  yytext[yyleng] = ’\0’;
+  yytext[yyleng] = '\0';
 }
 
 /*main function*/
-void main(){
+int main(){
   int i;
   i = yylex();
   while (i>0 && i < 55) {
-    printf("Token number:%d,value:"%s",line %d.",i,yytext,yylineno);
+    printf("Token number:%d,value:\"%s\",line %d.\n",i,yytext,yylineno);
     i = yylex();
   }
 }

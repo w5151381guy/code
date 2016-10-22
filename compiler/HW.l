@@ -62,6 +62,29 @@ IntLit {Digit}+
 Id {Letter}({Letter}|{Digit}|_)*
 %%
 
+/*keyword definition*/
+[Bb][Ee][Gg][Ii][Nn]                  {return(BEGIN);}
+[Ee][Nn][Dd]                          {return(END);}
+[Rr][Ee][Aa][Dd]                      {return(READ);}
+[Ww][Rr][Ii][Tt][Ee]                  {return(WRITE);}
+[Ii][Ff]                              {return(IF);}
+[Tt][Hh][Ee][Nn]                      {return(THEN);}
+[Ee][Ll][Ss][Ee]                      {return(ELSE);}
+[En][Nn][Dd][Ii][Ff]                  {return(ENDIF);}
+[Ff][Oo][Rr]                          {return(FOR);}
+[Tt][Oo]                              {return(TO);}
+[Ee][Nn][Dd][Ff][Oo][Rr]              {return(ENDFOR);}
+[Ww][Hh][Ii][Ll][Ee]                  {return(WHILE);}
+[Ee][Nn][Dd][Ww][Hh][Ii][Ll][Ee]      {return(ENDWHILE);}
+[Rr][Ee][Pp][Ee][Aa][Tt]              {return(REPEAT);}
+[Rr][Ee][Pp][Ee][Aa][Tt][Ee][Nn][Dd]  {return(REPEATEND);}
+[Dd][Ee][Cc][Ll][Aa][Rr][Ee]          {return(DECLARE);}
+[Aa][Ss]                              {return(AS);}
+[Ii][Nn][Tt][Ee][Gg][Ee][Rr]          {return(INTEGER);}
+[Rr][Ee][Aa][Ll]                      {return(REAL);}
+[Bb][Oo][Oo][Ll]                      {return(BOOL);}
+[Ss][Cc][Aa][Nn][Ee][Oo][Ff]          {return(SCANEOF);}
+
 /*name definition*/
 [ \t\n]              {/* skip white spaces */}
 {Name}               {return(ID)};
@@ -104,7 +127,7 @@ Id {Letter}({Letter}|{Digit}|_)*
 /*integer definition*/
 {IntLit}             {return(INTEGER_LITERAL);}
 ({IntLit}[.]{IntLit})([Ee][+-]?{IntLit})? {return(EXPONENTIAL);}
-({IntLit}[.]{IntLit})? {return(FLOAT);}
+({IntLit}[.]{IntLit}) {return(FLOAT);}
 
 /*c program*/
 stripquotes()

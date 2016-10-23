@@ -153,6 +153,7 @@ Id {Letter}({Letter}|{Digit}|_)*
 ({IntLit}[.]{IntLit})? {return(FLOAT);}
 ({IntLit}[.]{IntLit})([Ee][+-]?{IntLit}{Name})? {return(ILLEGAL);}
 ({IntLit}[.]{IntLit})([Ee][+-]?{IntLit})? {return(EXPONENTIAL);}
+<<eof>>      {return(SCANEOF);}
 %%
 
 /*c program*/
@@ -174,6 +175,11 @@ int main(){
   while (i>0 && i < 56) {
     if(i == 55)
       printf("Line %d:\"%s\" is an illegal identifier.\n",yylineno,yytext);
+    else if(i == 30){
+      printf("Token number:%d,value:\"SCANEOF\",line %d.\n",i,yylineno);
+      printf("End of the execution\n");
+      break;
+    }
     else
       printf("Token number:%d,value:\"%s\",line %d.\n",i,yytext,yylineno);
     i = yylex();

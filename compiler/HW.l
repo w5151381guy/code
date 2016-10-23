@@ -52,6 +52,7 @@
 #define MULTI_ASSIGN 52     // *=
 #define DIVI_ASSIGN 53      // /=
 #define REMAIN_ASSIGN 54    // %=
+#define ILLEGAL 55
 %}
 
 /*regular expression*/
@@ -59,6 +60,7 @@ Digit [0-9]
 Letter [a-zA-Z]
 Name {Letter}{Letter}*
 IntLit {Digit}+
+Illegal_ID {IntLit}{Name}
 Id {Letter}({Letter}|{Digit}|_)*
 %x Comment1
 %x Comment2
@@ -94,11 +96,16 @@ Id {Letter}({Letter}|{Digit}|_)*
 [Rr][Ee][Aa][Ll]                      {return(REAL);}
 [Bb][Oo][Oo][Ll]                      {return(BOOL);}
 [Ss][Cc][Aa][Nn][Ee][Oo][Ff]          {return(SCANEOF);}
-
+[,.][,.]                              {return(ILLEGAL);}
+[*/][*/+]                             {return(ILLEGAL);}
+[*/+][*/]                             {return(ILLEGAL);}
+[+][-]|[-][+]                         {return(ILLEGAL);}
 
 [ \t\n]              {/* skip white spaces */}
 {Name}               {return(ID);}
 {Id}                 {return(ID);}
+{Illegal_ID}         {return(ILLEGAL);}
+["]{Id}              {return(ILLEGAL);}
 \"[^\"\n]*\" {stripquotes(); return(STRING);}
 
 
@@ -106,7 +113,6 @@ Id {Letter}({Letter}|{Digit}|_)*
 ";"                  {return(semicolon);}
 "("                  {return(left_parenthesis);}
 ")"                  {return(right_parenthesis);}
-
 
 ":="                 {return(ASSIGNMENT);}
 "+"                  {return(ADDITION);}
@@ -131,9 +137,22 @@ Id {Letter}({Letter}|{Digit}|_)*
 "/="                 {return(DIVI_ASSIGN);}
 "%="                 {return(REMAIN_ASSIGN);}
 
+":="+                {return(ILLEGAL);}
+">"+"="+             {return(ILLEGAL);}
+"="+">"+             {return(ILLEGAL);}
+">"+"<"+|"<"+">"+    {return(ILLEGAL);}
+
+(0)+{IntLit}         {return(ILLEGAL);}
 {IntLit}             {return(INTEGER_LITERAL);}
-({IntLit}[.]{IntLit})([Ee][+-]?{IntLit})? {return(EXPONENTIAL);}
+({Name}{IntLit}[.]{IntLit})? {return(ILLEGAL);}
+({Name}[.]{IntLit})? {return(ILLEGAL);}
+({IntLit}[.]{IntLit}{Name})? {return(ILLEGAL);}
+({IntLit}[.]{Name})? {return(ILLEGAL);}
+[.]{IntLit}? {return(ILLEGAL);}
+{IntLit}[.]? {return(ILLEGAL);}
 ({IntLit}[.]{IntLit})? {return(FLOAT);}
+({IntLit}[.]{IntLit})([Ee][+-]?{IntLit}{Name})? {return(ILLEGAL);}
+({IntLit}[.]{IntLit})([Ee][+-]?{IntLit})? {return(EXPONENTIAL);}
 %%
 
 /*c program*/
@@ -152,8 +171,11 @@ stripquotes()
 int main(){
   int i;
   i = yylex();
-  while (i>0 && i < 55) {
-    printf("Token number:%d,value:\"%s\",line %d.\n",i,yytext,yylineno);
+  while (i>0 && i < 56) {
+    if(i == 55)
+      printf("Line %d:\"%s\" is an illegal identifier.\n",yylineno,yytext);
+    else
+      printf("Token number:%d,value:\"%s\",line %d.\n",i,yytext,yylineno);
     i = yylex();
   }
 }

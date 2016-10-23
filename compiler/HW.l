@@ -96,7 +96,7 @@ Id {Letter}({Letter}|{Digit}|_)*
 [Rr][Ee][Aa][Ll]                      {return(REAL);}
 [Bb][Oo][Oo][Ll]                      {return(BOOL);}
 [Ss][Cc][Aa][Nn][Ee][Oo][Ff]          {return(SCANEOF);}
-[,.][,.]                              {return(ILLEGAL);}
+[,.]+[,.]+                            {return(ILLEGAL);}
 [*/][*/+]                             {return(ILLEGAL);}
 [*/+][*/]                             {return(ILLEGAL);}
 [+][-]|[-][+]                         {return(ILLEGAL);}

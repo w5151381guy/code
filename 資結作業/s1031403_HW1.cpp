@@ -48,97 +48,106 @@ int main()
 {
     cout<<"Please enter the exit point:";
     cin>>m>>n;
-    int maze[m][n];
+    int maze[n+2][m+2];
+    int maze2[n+2][m+2];
     srand((unsigned)time(NULL));
     cout<<"最初的迷宮"<<endl;
-    for(int i=0;i<m;i++)
+    for(int i=0;i<n+2;i++){
+      for(int j=0;j<m+2;j++){
+        maze[i][j] = 1;
+        //maze2[i][j] = 1;
+      }
+    }
+    for(int i=1;i<=n;i++)
     {
-        for(int j=0;j<n;j++)
+        for(int j=1;j<=m;j++)
         {
               maze[i][j]=rand()%2;
         }
     }
-    int x=0,y=0;
-    maze[x][y]=0; maze[m-1][n-1]=0;
-    for(int i=0;i<m;i++){
-        for(int j=0;j<n;j++)
+    maze[1][1]=0; maze[n][m]=0;
+    for(int i=0;i<n+2;i++){
+      for(int j=0;j<m+2;j++)
+        maze2[i][j] = maze[i][j];
+    }
+    int x=1,y=1;
+    for(int i=0;i<n+2;i++){
+        for(int j=0;j<m+2;j++)
             cout<<maze[i][j];
         cout<<endl;
     }
-    while(x != m-1 && y != n-1)
+    maze2[1][1]=2;
+    while(x != n && y != m)
     {
-        if(maze[x][y+1]==0)                         //向下走
-        {
-            maze[x][y]=2;
-            y++;
-            push(x);
-            push(y);
-        }
-        if(maze[x+1][y-1]==0)                //向右上角走
-        {
-            maze[x][y]=2;
-            x++; y--;
-            push(x);
-            push(y);
-        }
+        push(x);push(y);
         if(maze[x+1][y]==0)                         //向右走
         {
-            maze[x][y]=2;                         //存入節點並設定走過的點為2
-            x++;
-            push(x);
-            push(y);
+          maze2[x+1][y]=2;                         //存入節點並設定走過的點為2
+          x++;
+          //push(x);
         }
-        if(maze[x+1][y+1]==0)                //向右下角走
+        else if(maze[x][y+1]==0)                         //向下走
         {
-            maze[x][y]=2;
+            maze2[x][y+1]=2;
+            y++;
+            //push(y);
+        }
+        else if(maze[x+1][y+1]==0)                //向右下角走
+        {
+            maze2[x+1][y+1]=2;
             x++; y++;
-            push(x);
-            push(y);
+            //push(x);
+            //push(y);
         }
-        if(maze[x][y-1]==0)                         //向上走
+        else if(maze[x-1][y]==0)                         //向左走
         {
-            maze[x][y]=2;
-            y--;
-            push(x);
-            push(y);
-        }
-        if(maze[x-1][y+1]==0)                //向左下角走
-        {
-            maze[x][y]=2;
-            x--; y++;
-            push(x);
-            push(y);
-        }
-        if(maze[x-1][y]==0)                         //向左走
-        {
-            maze[x][y]=2;
+            maze2[x-1][y]=2;
             x--;
-            push(x);
-            push(y);
+            //push(x);
         }
-        if(maze[x-1][y-1]==0)                //向左上角走
+        else if(maze[x][y-1]==0)                         //向上走
         {
-            maze[x][y]=2;
+            maze2[x][y-1]=2;
+            y--;
+            //push(y);
+        }
+        else if(maze[x+1][y-1]==0)                //向右上角走
+        {
+            maze2[x+1][y-1]=2;
+            x++; y--;
+            //push(x);
+            //push(y);
+        }
+        else if(maze[x-1][y+1]==0)                //向左下角走
+        {
+            maze2[x-1][y+1]=2;
+            x--; y++;
+            //push(x);
+            //push(y);
+        }
+        else if(maze[x-1][y-1]==0)                //向左上角走
+        {
+            maze2[x-1][y-1]=2;
             x--; y--;
-            push(x);
-            push(y);
+            //push(x);
+            //push(y);
         }
         else
         {
-            maze[x][y] = 2;                /* 表示是迴溯的路 */
-            y = pop();                     /* 退回一步 */
-            x = pop();
+            maze2[x][y] = 3;                /* 表示是迴溯的路 */
+            x = pop();                     /* 退回一步 */
+            y = pop();
         }
     }
-    cout<<"走過的迷宮"<<endl;
-    maze[m-1][n-1]=2;
-    for(int i=0;i<m;i++)
-    {
-        for(int j=0;j<n;j++)
-        {
-            cout<<maze[i][j];
-        }
-        cout<<endl;
-    }
+      maze2[n][m] = 2;
+      cout<<"走過的迷宮"<<endl;
+      for(int i=0;i<n+2;i++)
+      {
+          for(int j=0;j<m+2;j++)
+          {
+              cout<<maze2[i][j];
+          }
+            cout<<endl;
+      }
     return 0;
 }

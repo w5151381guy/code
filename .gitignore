@@ -1,3 +1,4 @@
 lex.yy.c
 *.out
 *.txt
+makefile

@@ -2,6 +2,7 @@
   /*C Definition*/
   #include <stdio.h>
   #include <math.h>
+  #include <stdlib.h>
   #define YYSTYPE double
   YYSTYPE ans = 0;
   extern int yylex();
@@ -12,8 +13,8 @@
 %left '+' '-'
 %left '*' '/'
 %right '^'
-%left COS SIN EXP SQRT TAN LOG ABS
-%right NEG VAR
+%left COS SIN EXP SQRT TAN LOG
+%right NEG VAR ABS
 %%
 input
   : /*empty*/
@@ -26,14 +27,14 @@ expression
   | expression '*' expression {$$ = $1 * $3;}
   | expression '/' expression {$$ = $1 / $3;}
   | expression '^' expression {$$ = pow($1,$3);}
-  | NEG  term  {$$ = - $2;}
-  | SQRT term  {$$ = sqrt($2);}
-  | ABS  term  {$$ = abs($2);}
-  | LOG  term  {$$ = log($2);}
-  | COS  term  {$$ = cos($2);}
-  | SIN  term  {$$ = sin($2);}
-  | TAN  term  {$$ = tan($2);}
-  | EXP  term  {$$ = exp($2);}
+  | NEG term  {$$ = - $2;}
+  | SQRT term {$$ = sqrt($2);}
+  | ABS term  {$$ = abs($2);}
+  | LOG term  {$$ = log10($2);}
+  | COS term  {$$ = cos($2*3.1415926/180);}
+  | SIN term  {$$ = sin($2*3.1415926/180);}
+  | TAN term  {$$ = tan($2*3.1415926/180);}
+  | EXP term  {$$ = exp($2);}
   //| VAR { $$ = Varvalue($1); }
   ;
 term

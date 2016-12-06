@@ -2,3 +2,5 @@ lex.yy.c
 *.out
 *.txt
 makefile
+input
+test

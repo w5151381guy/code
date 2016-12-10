@@ -3,6 +3,7 @@
   #include <stdio.h>
   #include <math.h>
   #include <stdlib.h>
+  int lineno = 0;
 %}
 int returnVar(char *text);
 /*regular expression*/
@@ -20,14 +21,12 @@ digit [0-9]
 "++"          {return ADD;}
 "--"          {return SUB;}
 [Ss][Qq][Rr][Tt]  {return SQRT;}
-[*]+[*]+ { return ERROR1; }
 [ \t] {/*skip white space*/}
-[\n]  {return '\n';}
+[\n]  {lineno++; yylval.line = lineno; return '\n'; return LINE;}
 . {return yytext[0];}
 %%
 int returnVar(char *text){
-	char *temp = text;
-	return (temp[3]-'0'); //char to int
+	return (text[3]-'0'); //char to int
 }
 int yywrap(){
   return 1;

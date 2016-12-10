@@ -3,22 +3,31 @@
   #include <stdio.h>
   #include <math.h>
   #include <stdlib.h>
-  #define YYSTYPE double
-  YYSTYPE ans = 0;
+  double ans = 0;
   extern int yylex();
   void yyerror(char *s);
-  //double Varvalue(int i);
 %}
-%token NUMBER
+%union {
+  float num;
+  int index;
+}
+%type <num> expression;
+%type <num> term;
+%token <num> NUMBER;
+%token <index> VAR;
+%token SIN COS NEG ABS LOG ADD SUB TAN SQRT
+%token ERROR1
+
+%left '='
 %left '+' '-'
-%left '*' '/'
+%left '*' '/' '%'
 %right '^'
-%left COS SIN EXP SQRT TAN LOG
-%right NEG VAR ABS
+%right UMINUS
 %%
 input
   : /*empty*/
   | input expression '\n' {printf("%f\n",ans = $2);}
+  | input '\n'
   ;
 expression
   : term {$$ = $1;}
@@ -27,15 +36,18 @@ expression
   | expression '*' expression {$$ = $1 * $3;}
   | expression '/' expression {$$ = $1 / $3;}
   | expression '^' expression {$$ = pow($1,$3);}
-  | NEG term  {$$ = - $2;}
+  | ADD expression {$$ = $2+1;}
+  | SUB expression {$$ = $2-1;}
+  | NEG term  {$$ = -$2;}
   | SQRT term {$$ = sqrt($2);}
-  | ABS term  {$$ = abs($2);}
+  | ABS term  {$$ = fabs($2);}
   | LOG term  {$$ = log10($2);}
   | COS term  {$$ = cos($2*3.1415926/180);}
   | SIN term  {$$ = sin($2*3.1415926/180);}
   | TAN term  {$$ = tan($2*3.1415926/180);}
-  | EXP term  {$$ = exp($2);}
-  //| VAR { $$ = Varvalue($1); }
+  | ADD term  {$$ = ($2+1);}
+  | SUB term  {$$ = ($2-1);}
+  | '-' expression %prec UMINUS {$$ = -$2;}
   ;
 term
   : NUMBER {$$ = $1;}

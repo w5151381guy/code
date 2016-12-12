@@ -4,8 +4,7 @@
   #include <math.h>
   #include <stdlib.h>
   double ans = 0;
-  int VarArray[20]={0}; //Var array
-  int VarArray2[20];    //find undefined var
+  int VarArray[20]={'\0'}; //Var array
   extern int yylex();
   extern char *yytext;
   void yyerror(char *s);
@@ -69,6 +68,11 @@ int SetVar(int value){
   }
   if(VarArray[value] == 0)
     VarArray[value] = 0;
+  /*find undefined var*/
+  if(tempVar != value && VarArray[value] == '\0'){
+    printf("Line %d:var%d is undefined\n",line,value);
+    exit(0);
+  }
   return VarArray[value];
 }
 int PutVar(int var, int value){

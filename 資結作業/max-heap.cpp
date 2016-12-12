@@ -1,108 +1,46 @@
-#include <iostream>
-#include <vector>
-#include <cstdlib>
-#include <algorithm>
-#include <math.h>
+#include<iostream>
+#include<cstdlib>
+#include<cmath>
 using namespace std;
-//int arr[]={16,7,22,19,12};
-//vector<int> v1(arr,arr+sizeof(arr)/sizeof(arr[0]));
-vector<int> v1;
-void select(int);
-void insert();
-int deletion();
-void print();
-int judge(int);
-int main()
+int size;
+int arr[20];
+void heapify(int arr[],int i,int size)
 {
-    int num;
-    while(true)
+    int left,right,largest,temp;
+    left=2*i;
+    right=(2*i+1);
+    if((left<=size)&&arr[left]>arr[i])           //判斷子結點有沒有比父結點大
+        largest=left;
+    else
+        largest=i;
+    if((right<=size)&&(arr[right]>arr[largest])) //同上
+        largest=right;
+    if(largest!=i)                               //如果子結點比父結點大的話就做交換
     {
-        cout<<"(1)insert"<<endl;
-        cout<<"(2)delete"<<endl;
-        cout<<"(3)print"<<endl;
-        cout<<"(0)exit"<<endl;
-        cin>>num;
-        select(num);
-    }
-    return 0;
-}
-void select(int a)
-{
-    switch(a)
-    {
-        case 1:insert();break;
-        case 2:deletion();break;
-        case 3:print();break;
-        case 0:exit(0);
+        temp=arr[i];
+        arr[i]=arr[largest];
+        arr[largest]=temp;
+        heapify(arr,largest,size);
     }
 }
-void insert()
+void max_heap(int arr[],int size)
 {
-    int num;
-    cout<<"Please input number: ";
-    cin>>num;
-    v1.push_back(num);
-    for (int i = 0; i < v1.size(); i++)
-    {
-        int child = i;
-        do
-        {
-            int root = child / 2;
-            if(child % 2 == 0)
-                root--;
-            if (v1[root] < v1[child])
-            {
-                  int temp = v1[root];
-                  v1[root] = v1[child];
-                  v1[child] = temp;
-            }
-            child = root;
-          } while (child != 0);
-    }
+    for(int i=size/2;i>=1;i--)
+        heapify(arr,i,size);
 }
-int deletion()
-{
-    int popValue = v1[0];
-    v1[0] = v1[v1.size()-1];
-    v1.erase(v1.end()-1);
-    int index = 1;
-    while(true){
-      if(2 * index >= v1.size())
-          break;
-
-      if(2 * index == v1.size()-1){
-      if(v1[index] < v1[2*index])
-          swap(v1[index], v1[2*index]);
-          break;
-    }
-
-      int maxVal = max(v1[2*index], v1[2*index+1]);
-      if(maxVal == v1[2*index]){
-        swap(v1[index], v1[2*index]);
-        index = index * 2;
-      }
-      else {
-        swap(v1[index], v1[2*index+1]);
-        index = index * 2 + 1;
-      }
-  }
-  return popValue;
+void insert(){
+  int num;
+  cout<<"Please insert number:";
+  cin>>num;
+  arr[size+1] = num;
+  size++;
+  max_heap(arr,size);
 }
-void print()
-{
-    int level;
-    level = judge(v1.size());
-    for(int i=0;i<level;i++)
-    {
-        for(int j=pow(2,i);j<2*(pow(2,i));j++)
-        {
-            if(j == v1.size()+1)
-                break;
-            else
-                cout<<v1[j-1]<<"   ";
-        }
-        cout<<endl;
-    }
+void deletion(){
+  for(int i=1;i<size;i++)
+    arr[i]=arr[i+1];
+  size--;
+  max_heap(arr,size);
 }
 int judge(int x)
 {
@@ -114,4 +52,48 @@ int judge(int x)
       a*=2;
       ++timer;
     }
+}
+void print()
+{
+    int level;
+    level = judge(size);
+    for(int i=0;i<level;i++)
+    {
+        for(int j=pow(2,i);j<2*(pow(2,i));j++)
+        {
+            if(j == size+1)
+                break;
+            else
+                cout<<arr[j]<<" ";
+        }
+        cout<<endl;
+    }
+}
+void select(int a)
+{
+    switch(a)
+    {
+        case 1:insert();break;
+        case 2:deletion();break;
+        case 3:print();break;
+        case 0:exit(0);
+    }
+}
+int main(){
+  cout<<"Please enter the size of array:";
+  cin>>size;
+  cout<<"Please enter the element of array:";
+  for(int i=1;i<=size;i++)
+    cin>>arr[i];
+  max_heap(arr,size);
+  int num;
+  while(true){
+    cout<<"(1)insert"<<endl;
+    cout<<"(2)delete"<<endl;
+    cout<<"(3)print"<<endl;
+    cout<<"(0)exit"<<endl;
+    cin>>num;
+    select(num);
+  }
+  return 0;
 }

@@ -21,7 +21,6 @@
 %type <num> term;
 %token <num> NUMBER;
 %token <index> VAR;
-%token ERROR;
 
 %left SIN COS NEG ABS LOG ADD SUB TAN SQRT
 %left '='

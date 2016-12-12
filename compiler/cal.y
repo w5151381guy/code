@@ -4,26 +4,27 @@
   #include <math.h>
   #include <stdlib.h>
   double ans = 0;
-  int VarArray[20]; //Var array
+  int VarArray[20]={0}; //Var array
+  int VarArray2[20];    //find undefined var
   extern int yylex();
+  extern char *yytext;
   void yyerror(char *s);
   int SetVar(int value);
   int PutVar(int var, int value);
   int tempVar, head = 1;
+  int line = 1;
 %}
 %union {
   float num;
   int index;
-  float line;
 }
 %type <num> expression;
 %type <num> term;
 %token <num> NUMBER;
 %token <index> VAR;
-%left SIN COS NEG ABS LOG ADD SUB TAN SQRT
-%token ERROR1
-%token <line> LINE
+%token ERROR;
 
+%left SIN COS NEG ABS LOG ADD SUB TAN SQRT
 %left '='
 %left '+' '-'
 %left '*' '/' '%'
@@ -32,8 +33,8 @@
 %%
 input
   : /*empty*/
-  | input expression '\n' {printf("%f\n",ans = $2);}
-  | input '\n'
+  | input expression '\n' {line++;printf("%f\n",ans = $2);}
+  | input '\n'            {line++;}
   ;
 expression
   : term {$$ = $1;}
@@ -53,7 +54,7 @@ expression
   | ADD term  {$$ = ($2+1);}
   | SUB term  {$$ = ($2-1);}
   | '-' expression %prec UMINUS {$$ = -$2;}
-  | VAR {$$ = SetVar($1);}
+  | VAR       {$$ = SetVar($1);}
   ;
 term
   : NUMBER {$$ = $1;}
@@ -76,7 +77,7 @@ int PutVar(int var, int value){
   VarArray[var] = value;
 }
 void yyerror(char *s){
-  printf("Line %d:%s\n",LINE,s);
+  printf("Line %d:%s with token \"%s\"\n",line,s,yytext);
 }
 int main(){
   yyparse();

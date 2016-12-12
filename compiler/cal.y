@@ -9,7 +9,7 @@
   extern char *yytext;
   void yyerror(char *s);
   int SetVar(int value);
-  int PutVar(int var, int value);
+  void PutVar(int var, int value);
   int tempVar, head = 1;
   int line = 1;
 %}
@@ -75,7 +75,7 @@ int SetVar(int value){
   }
   return VarArray[value];
 }
-int PutVar(int var, int value){
+void PutVar(int var, int value){
   /*put value int VarArray*/
   head = 1;
   VarArray[var] = value;

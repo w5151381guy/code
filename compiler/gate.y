@@ -4,7 +4,9 @@
   #include <math.h>
   extern int yylex();
   extern char *yytext;
-  char input[100];
+  int operator[100];
+  int notseq[100];
+  int seq1[100],seq2[100];
   int counter = 0;
   int ans[2];
   int inputcounter = 0;
@@ -18,6 +20,7 @@
   int number2(int value);
   void putValue(int value1);
   void print();
+  void check();
   int record(int value);
   int *calNOT(int value);
   int *calAND(int value1 ,int value2);
@@ -55,11 +58,11 @@ expression
   | XOR '(' expression ',' expression ')'  {$$=*calXOR($3,$5);}
   | NOR '(' expression ',' expression ')'  {$$=*calNOR($3,$5);}
   | NXOR '(' expression ',' expression ')' {$$=*calNXOR($3,$5);}
-  | End_Of_File {print();}
+  | End_Of_File {check();}
   ;
 %%
 int number(int value){
-  /*cut value*/
+  /*cut value if value = 301 return 3*/
   int length = floor(log10(value)) + 1;
   int digit = 1;
   for(int i=1;i<length;i++)
@@ -67,6 +70,7 @@ int number(int value){
   return value/digit;
 }
 int number2(int value){
+  /*cut value if value = 301 return 1*/
   int length = floor(log10(value)) + 1;
   int digit = 1;
   for(int i=1;i<length;i++)
@@ -83,7 +87,9 @@ int *calNOT(int value){
   }
   else{
     if(temp1[num] == '\0'){
-      input[counter++] = *yytext;
+      operator[counter] = 0;
+      notseq[counter] = value;
+      counter++;
       ans[0] = -1; ans[1] = -1;
     }
     else{
@@ -93,190 +99,217 @@ int *calNOT(int value){
   }
   return ans;
 }
+int checkNull(int head1, int head2, int num1, int num2){
+  /*check if tempvalue is null*/
+  int check = 0;
+  if(head1 == 5 && head2 == 5 && (temp1[num1] == '\0' || temp1[num2] == '\0'))
+    check = 1;
+  if(head1 > head2 && temp1[num1] == '\0')
+    check = 1;
+  if(head1 < head2 && temp1[num2] == '\0')
+    check = 1;
+  return check;
+}
 int *calAND(int value1 ,int value2){
+  /*logic AND calculate*/
   int head1 = number(value1);
   int head2 = number(value2);
   int num1 = number2(value1);
   int num2 = number2(value2);
-  int check = 1;
-  if(head1 == 3 && head2 == 3){
-    ans[0] = input1[num1] & input1[num2];
-    ans[1] = input2[num1] & input2[num2];
+  int check = checkNull(head1,head2,num1,num2);
+  if(check == 1){
+    operator[counter] = 1;
+    seq1[counter] = value1;
+    seq2[counter] = value2;
+    counter++;
+    ans[0] = -1; ans[1] = -1;
   }
   else{
-    if(temp1[num1] == '\0' || temp1[num2] == '\0'){
-      input[counter++] = *yytext;
-      ans[0] = -1; ans[1] = -1;
-      check = 0;
+    if(head1 == 3 && head2 == 3){
+      ans[0] = input1[num1] & input1[num2];
+      ans[1] = input2[num1] & input2[num2];
     }
-    if(head1 > head2 && check == 1){
+    if(head1 == head2){
+      ans[0] = temp1[num1] & temp1[num2];
+      ans[1] = temp2[num1] & temp2[num2];
+    }
+    if(head1 > head2){
       ans[0] = temp1[num1] & input1[num2];
       ans[1] = temp2[num1] & input2[num2];
     }
-    if(head1 < head2 && check == 1){
+    else{
       ans[0] = input1[num1] & temp1[num2];
       ans[1] = input2[num1] & temp2[num2];
-    }
-    else{
-      ans[0] = temp1[num1] & temp1[num2];
-      ans[1] = temp2[num1] & temp2[num2];
     }
   }
   return ans;
 }
 int *calOR(int value1 ,int value2){
+  /*logic OR calculate*/
   int head1 = number(value1);
   int head2 = number(value2);
   int num1 = number2(value1);
   int num2 = number2(value2);
-  int check = 1;
-  if(head1 == 3 && head2 == 3){
-    ans[0] = input1[num1] | input1[num2];
-    ans[1] = input2[num1] | input2[num2];
+  int check = checkNull(head1,head2,num1,num2);
+  if(check == 1){
+    operator[counter] = 2;
+    seq1[counter] = value1;
+    seq2[counter] = value2;
+    counter++;
+    ans[0] = -1; ans[1] = -1;
   }
   else{
-    if(temp1[num1] == '\0' || temp1[num2] == '\0'){
-      input[counter++] = *yytext;
-      ans[0] = -1; ans[1] = -1;
-      check = 0;
+    if(head1 == 3 && head2 == 3){
+      ans[0] = input1[num1] | input1[num2];
+      ans[1] = input2[num1] | input2[num2];
     }
-    if(head1 > head2 && check == 1){
-      ans[0] = temp1[num1] | input1[num2];
-      ans[1] = temp2[num1] | input2[num2];
-    }
-    if(head1 < head2 && check == 1){
-      ans[0] = input1[num1] | temp1[num2];
-      ans[1] = input2[num1] | temp2[num2];
-    }
-    else{
+    if(head1 == head2){
       ans[0] = temp1[num1] | temp1[num2];
       ans[1] = temp2[num1] | temp2[num2];
     }
-  }
+    if(head1 > head2){
+      ans[0] = temp1[num1] | input1[num2];
+      ans[1] = temp2[num1] | input2[num2];
+    }
+    else{
+      ans[0] = input1[num1] | temp1[num2];
+      ans[1] = input2[num1] | temp2[num2];
+    }
   return ans;
 }
 int *calNAND(int value1 ,int value2){
+  /*logic NAND calculate*/
   int head1 = number(value1);
   int head2 = number(value2);
   int num1 = number2(value1);
   int num2 = number2(value2);
-  int check = 1;
-  if(head1 == 3 && head2 == 3){
-    ans[0] = !(input1[num1] & input1[num2]);
-    ans[1] = !(input2[num1] & input2[num2]);
+  int check = checkNull(head1,head2,num1,num2);
+  if(check == 1){
+    operator[counter] = 3;
+    seq1[counter] = value1;
+    seq2[counter] = value2;
+    counter++;
+    ans[0] = -1; ans[1] = -1;
   }
   else{
-    if(temp1[num1] == '\0' || temp1[num2] == '\0'){
-      input[counter++] = *yytext;
-      ans[0] = -1; ans[1] = -1;
-      check = 0;
+    if(head1 == 3 && head2 == 3){
+      ans[0] = !(input1[num1] & input1[num2]);
+      ans[1] = !(input2[num1] & input2[num2]);
     }
-    if(head1 > head2 && check == 1){
+    if(head1 == head2){
+      ans[0] = !(temp1[num1] & temp1[num2]);
+      ans[1] = !(temp2[num1] & temp2[num2]);
+    }
+    if(head1 > head2){
       ans[0] = !(temp1[num1] & input1[num2]);
       ans[1] = !(temp2[num1] & input2[num2]);
     }
-    if(head1 < head2 && check == 1){
+    else{
       ans[0] = !(input1[num1] & temp1[num2]);
       ans[1] = !(input2[num1] & temp2[num2]);
-    }
-    else{
-      ans[0] = !(temp1[num1] & temp1[num2]);
-      ans[1] = !(temp2[num1] & temp2[num2]);
     }
   }
   return ans;
 }
 int *calXOR(int value1 ,int value2){
+  /*logic XOR calculate*/
   int head1 = number(value1);
   int head2 = number(value2);
   int num1 = number2(value1);
   int num2 = number2(value2);
-  int check = 1;
-  if(head1 == 3 && head2 == 3){
-    ans[0] = input1[num1] ^ input1[num2];
-    ans[1] = input2[num1] ^ input2[num2];
+  int check = checkNull(head1,head2,num1,num2);
+  if(check == 1){
+    operator[counter] = 4;
+    seq1[counter] = value1;
+    seq2[counter] = value2;
+    counter++;
+    ans[0] = -1; ans[1] = -1;
   }
   else{
-    if(temp1[num1] == '\0' || temp1[num2] == '\0'){
-      input[counter++] = *yytext;
-      ans[0] = -1; ans[1] = -1;
-      check = 0;
+    if(head1 == 3 && head2 == 3){
+      ans[0] = input1[num1] ^ input1[num2];
+      ans[1] = input2[num1] ^ input2[num2];
     }
-    if(head1 > head2 && check == 1){
+    if(head1 == head2){
+      ans[0] = temp1[num1] ^ temp1[num2];
+      ans[1] = temp2[num1] ^ temp2[num2];
+    }
+    if(head1 > head2){
       ans[0] = temp1[num1] ^ input1[num2];
       ans[1] = temp2[num1] ^ input2[num2];
     }
-    if(head1 < head2 && check == 1){
+    else{
       ans[0] = input1[num1] ^ temp1[num2];
       ans[1] = input2[num1] ^ temp2[num2];
-    }
-    else{
-      ans[0] = temp1[num1] ^ temp1[num2];
-      ans[1] = temp2[num1] ^ temp2[num2];
     }
   }
   return ans;
 }
 int *calNXOR(int value1 ,int value2){
+  /*logic NXOR calculate*/
   int head1 = number(value1);
   int head2 = number(value2);
   int num1 = number2(value1);
   int num2 = number2(value2);
-  int check = 1;
-  if(head1 == 3 && head2 == 3){
-    ans[0] = !(input1[num1] ^ input1[num2]);
-    ans[1] = !(input2[num1] ^ input2[num2]);
+  int check = checkNull(head1,head2,num1,num2);
+  if(check == 1){
+    operator[counter] = 5;
+    seq1[counter] = value1;
+    seq2[counter] = value2;
+    counter++;
+    ans[0] = -1; ans[1] = -1;
   }
   else{
-    if(temp1[num1] == '\0' || temp1[num2] == '\0'){
-      input[counter++] = *yytext;
-      ans[0] = -1; ans[1] = -1;
-      check = 0;
+    if(head1 == 3 && head2 == 3){
+      ans[0] = !(input1[num1] ^ input1[num2]);
+      ans[1] = !(input2[num1] ^ input2[num2]);
     }
-    if(head1 > head2 && check == 1){
+    if(head1 == head2){
+      ans[0] = !(temp1[num1] ^ temp1[num2]);
+      ans[1] = !(temp2[num1] ^ temp2[num2]);
+    }
+    if(head1 > head2){
       ans[0] = !(temp1[num1] ^ input1[num2]);
       ans[1] = !(temp2[num1] ^ input2[num2]);
     }
-    if(head1 < head2 && check == 1){
+    else{
       ans[0] = !(input1[num1] ^ temp1[num2]);
       ans[1] = !(input2[num1] ^ temp2[num2]);
-    }
-    else{
-      ans[0] = !(temp1[num1] ^ temp1[num2]);
-      ans[1] = !(temp2[num1] ^ temp2[num2]);
     }
   }
   return ans;
 }
 int *calNOR(int value1 ,int value2){
+  /*logic NOR calculate*/
   int head1 = number(value1);
   int head2 = number(value2);
   int num1 = number2(value1);
   int num2 = number2(value2);
-  int check = 1;
-  if(head1 == 3 && head2 == 3){
-    ans[0] = !(input1[num1] | input1[num2]);
-    ans[1] = !(input2[num1] | input2[num2]);
+  int check = checkNull(head1,head2,num1,num2);
+  if(check == 1){
+    operator[counter] = 6;
+    seq1[counter] = value1;
+    seq2[counter] = value2;
+    counter++;
+    ans[0] = -1; ans[1] = -1;
   }
   else{
-    if(temp1[num1] == '\0' || temp1[num2] == '\0'){
-      input[counter++] = *yytext;
-      ans[0] = -1; ans[1] = -1;
-      check = 0;
+    if(head1 == 3 && head2 == 3){
+      ans[0] = !(input1[num1] | input1[num2]);
+      ans[1] = !(input2[num1] | input2[num2]);
     }
-    if(head1 > head2 && check == 1){
-      ans[0] = !(temp1[num1] | input1[num2]);
-      ans[1] = !(temp2[num1] | input2[num2]);
-    }
-    if(head1 < head2 && check == 1){
-      ans[0] = !(input1[num1] | temp1[num2]);
-      ans[1] = !(input2[num1] | temp2[num2]);
-    }
-    else{
+    if(head1 == head2){
       ans[0] = !(temp1[num1] | temp1[num2]);
       ans[1] = !(temp2[num1] | temp2[num2]);
     }
-  }
+    if(head1 > head2){
+      ans[0] = !(temp1[num1] | input1[num2]);
+      ans[1] = !(temp2[num1] | input2[num2]);
+    }
+    else{
+      ans[0] = !(input1[num1] | temp1[num2]);
+      ans[1] = !(input2[num1] | temp2[num2]);
+    }
   return ans;
 }
 int record(int value){
@@ -304,19 +337,38 @@ void print(){
       counter++;
     }
   }
-  printf("For all input is 1\nAns:");
+  printf("For all inputs are 1\nAns:");
   for(int i = 0 ; i < counter ; i++){
     printf("%d",arr1[i]);
   }
-  printf("\n");
-  printf("For all input is 0\nAns:");
+  printf("\nFor all inputs are 0\nAns:");
   for(int i = 0 ; i < counter ; i++){
     printf("%d",arr2[i]);
   }
   printf("\n");
 }
+void check(){
+  /*0 -> NOT 1 -> AND 2 -> OR 3 -> NAND 4 -> XOR 5 -> NXOR 6 -> NOR*/
+  int count = counter;
+  counter = 0;
+  for(int i=0;i<count;i++){
+    switch(operator[i]){
+      case 0:calNOT(notseq[i]);break;
+      case 1:calAND(seq1[i],seq2[i]);break;
+      case 2:calOR(seq1[i],seq2[i]);break;
+      case 3:calNAND(seq1[i],seq2[i]);break;
+      case 4:calXOR(seq1[i],seq2[i]);break;
+      case 5:calNXOR(seq1[i],seq2[i]);break;
+      case 6:calNOR(seq1[i],seq2[i]);break;
+    }
+  }
+  if(counter != 0)
+    check();
+  else
+    print();
+}
 void yyerror(char *s){
-  
+
 }
 int main(){
   yyparse();

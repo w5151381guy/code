@@ -6,22 +6,24 @@
   extern char *yytext;
   int operator[10000];
   int notseq[10000];
+  int buffseq[10000];
   int seq1[10000],seq2[10000],seq3[10000];
   int counter = 0;
   int ans[2];
   int inputcounter = 0;
   int outputcounter = 0;
-  int temp1[10000] = {'\0'};    //set tempValue1 = NULL
-  int temp2[10000] = {'\0'};    //set tempValue2 = NULL
+  int temp1[10000];    //set tempValue1 = NULL
+  int temp2[10000];    //set tempValue2 = NULL
   int input1[10000];   //set primary number
   int input2[10000];   //set primary number
-  int recordIndex[10000] = {0};      //record buff value
+  int output1[10000];
+  int output2[10000];
   int number(int value);
   int number2(int value);
   void putValue(int value1);
   void print();
   void check();
-  int record(int value);
+  int *record(int value);
   int *calNOT(int value);
   int *calAND(int value1 ,int value2);
   int *calOR(int value ,int value2);
@@ -48,9 +50,9 @@ start
 expression
   : NUMBER {$$ = $1;}
   | INPUT {input1[inputcounter] = 1; input2[inputcounter] = 0; inputcounter++;}
-  | OUTPUT {outputcounter++;}
+  | OUTPUT {for(int i=0;i<100;i++){temp1[i] = -1; temp2[i] = -1;}outputcounter++;}
   | expression '=' expression {$$=$3; putValue($1);}
-  | BUFF '(' expression ')' {$$=record($3);}
+  | BUFF '(' expression ')' {$$=*record($3);}
   | NOT '(' expression ')'  {$$=*calNOT($3);}
   | AND '(' expression ',' expression ')'  {$$=*calAND($3,$5);}
   | OR '(' expression ',' expression ')'   {$$=*calOR($3,$5);}
@@ -86,7 +88,7 @@ int *calNOT(int value){
     ans[1] = !input2[num];
   }
   else{
-    if(temp1[num] == '\0'){
+    if(temp1[num] == -1){
       operator[counter] = 0;
       notseq[counter] = value;
       ans[0] = -1; ans[1] = -1;
@@ -101,11 +103,11 @@ int *calNOT(int value){
 int checkNull(int head1, int head2, int num1, int num2){
   /*check if tempvalue is null*/
   int check = 0;
-  if(head1 == 5 && head2 == 5 && (temp1[num1] == '\0' || temp1[num2] == '\0'))
+  if(head1 == 5 && head2 == 5 && (temp1[num1] == -1 || temp1[num2] == -1))
     check = 1;
-  if(head1 > head2 && temp1[num1] == '\0')
+  if(head1 > head2 && temp1[num1] == -1)
     check = 1;
-  if(head1 < head2 && temp1[num2] == '\0')
+  if(head1 < head2 && temp1[num2] == -1)
     check = 1;
   return check;
 }
@@ -307,41 +309,45 @@ int *calNOR(int value1 ,int value2){
   }
   return ans;
 }
-int record(int value){
+int *record(int value){
   int num = number2(value);
-  recordIndex[num] = 1;
-  return recordIndex[num];
+  if(temp1[num] == -1){
+    operator[counter] = 7;
+    buffseq[counter] = value;
+    ans[0] = -1 ; ans[1] = -1;
+  }
+  else{
+    ans[0] = temp1[num];
+    ans[1] = temp2[num];
+  }
+  return ans;
 }
 void putValue(int value1){
   int head1 = number(value1);
   int num1 = number2(value1);
-  if(head1 != 4 && ans[0] != -1){
-    temp1[num1] = ans[0];
-    temp2[num1] = ans[1];
-  }
-  if(ans[0] == -1)
+  if(ans[0] == -1){
     seq3[counter] = value1;
-  counter++;
-}
-void print(){
-  int counter = 0;
-  int arr1[10000], arr2[10000];
-  for(int i = 0 ;; i++){
-    if(counter == outputcounter)
-      break;
-    if(recordIndex[i] == 1){
-      arr1[counter] = temp1[i];
-      arr2[counter] = temp2[i];
-      counter++;
+    counter++;
+  }
+  else{
+    if(head1 == 4){
+      output1[num1] = ans[0];
+      output2[num1] = ans[1];
+    }
+    else{
+      temp1[num1] = ans[0];
+      temp2[num1] = ans[1];
     }
   }
+}
+void print(){
   printf("For all inputs are 1\nAns:");
-  for(int i = 0 ; i < counter ; i++){
-    printf("%d",arr1[i]);
+  for(int i = 0 ; i < outputcounter ; i++){
+    printf("%d",output1[i]);
   }
   printf("\nFor all inputs are 0\nAns:");
-  for(int i = 0 ; i < counter ; i++){
-    printf("%d",arr2[i]);
+  for(int i = 0 ; i < outputcounter ; i++){
+    printf("%d",output2[i]);
   }
   printf("\n");
 }
@@ -358,17 +364,16 @@ void check(){
       case 4:calXOR(seq1[i],seq2[i]);break;
       case 5:calNXOR(seq1[i],seq2[i]);break;
       case 6:calNOR(seq1[i],seq2[i]);break;
-      putValue(seq3[i]);
+      case 7:record(buffseq[i]);break;
     }
+    putValue(seq3[i]);
   }
   if(counter != 0)
     check();
   else
     print();
 }
-void yyerror(char *s){
-
-}
+void yyerror(char *s){}
 int main(){
   yyparse();
   return 0;

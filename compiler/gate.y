@@ -1,6 +1,7 @@
 %{
   #include <stdio.h>
   #include <stdlib.h>
+  #include <string.h>
   #include <math.h>
   extern int yylex();
   extern char *yytext;
@@ -50,7 +51,7 @@ start
 expression
   : NUMBER {$$ = $1;}
   | INPUT {input1[inputcounter] = 1; input2[inputcounter] = 0; inputcounter++;}
-  | OUTPUT {for(int i=0;i<100;i++){temp1[i] = -1; temp2[i] = -1;}outputcounter++;}
+  | OUTPUT {outputcounter++;}
   | expression '=' expression {$$=$3; putValue($1);}
   | BUFF '(' expression ')' {$$=*record($3);}
   | NOT '(' expression ')'  {$$=*calNOT($3);}
@@ -375,6 +376,8 @@ void check(){
 }
 void yyerror(char *s){}
 int main(){
+  memset(&temp1,-1,10000);
+  memset(&temp2,-1,10000);
   yyparse();
   return 0;
 }

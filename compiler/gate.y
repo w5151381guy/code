@@ -4,18 +4,18 @@
   #include <math.h>
   extern int yylex();
   extern char *yytext;
-  int operator[100];
-  int notseq[100];
-  int seq1[100],seq2[100];
+  int operator[10000];
+  int notseq[10000];
+  int seq1[10000],seq2[10000],seq3[10000];
   int counter = 0;
   int ans[2];
   int inputcounter = 0;
   int outputcounter = 0;
-  int temp1[100] = {'\0'};    //set tempValue1 = NULL
-  int temp2[100] = {'\0'};    //set tempValue2 = NULL
-  int input1[100];   //set primary number
-  int input2[100];   //set primary number
-  int recordIndex[100] = {0};      //record buff value
+  int temp1[10000] = {'\0'};    //set tempValue1 = NULL
+  int temp2[10000] = {'\0'};    //set tempValue2 = NULL
+  int input1[10000];   //set primary number
+  int input2[10000];   //set primary number
+  int recordIndex[10000] = {0};      //record buff value
   int number(int value);
   int number2(int value);
   void putValue(int value1);
@@ -89,7 +89,6 @@ int *calNOT(int value){
     if(temp1[num] == '\0'){
       operator[counter] = 0;
       notseq[counter] = value;
-      counter++;
       ans[0] = -1; ans[1] = -1;
     }
     else{
@@ -121,7 +120,6 @@ int *calAND(int value1 ,int value2){
     operator[counter] = 1;
     seq1[counter] = value1;
     seq2[counter] = value2;
-    counter++;
     ans[0] = -1; ans[1] = -1;
   }
   else{
@@ -129,7 +127,7 @@ int *calAND(int value1 ,int value2){
       ans[0] = input1[num1] & input1[num2];
       ans[1] = input2[num1] & input2[num2];
     }
-    if(head1 == head2){
+    if(head1 == 5 && head2 == 5){
       ans[0] = temp1[num1] & temp1[num2];
       ans[1] = temp2[num1] & temp2[num2];
     }
@@ -137,7 +135,7 @@ int *calAND(int value1 ,int value2){
       ans[0] = temp1[num1] & input1[num2];
       ans[1] = temp2[num1] & input2[num2];
     }
-    else{
+    if(head1 < head2){
       ans[0] = input1[num1] & temp1[num2];
       ans[1] = input2[num1] & temp2[num2];
     }
@@ -155,7 +153,6 @@ int *calOR(int value1 ,int value2){
     operator[counter] = 2;
     seq1[counter] = value1;
     seq2[counter] = value2;
-    counter++;
     ans[0] = -1; ans[1] = -1;
   }
   else{
@@ -163,7 +160,7 @@ int *calOR(int value1 ,int value2){
       ans[0] = input1[num1] | input1[num2];
       ans[1] = input2[num1] | input2[num2];
     }
-    if(head1 == head2){
+    if(head1 == 5 && head2 == 5){
       ans[0] = temp1[num1] | temp1[num2];
       ans[1] = temp2[num1] | temp2[num2];
     }
@@ -175,6 +172,7 @@ int *calOR(int value1 ,int value2){
       ans[0] = input1[num1] | temp1[num2];
       ans[1] = input2[num1] | temp2[num2];
     }
+  }
   return ans;
 }
 int *calNAND(int value1 ,int value2){
@@ -188,7 +186,6 @@ int *calNAND(int value1 ,int value2){
     operator[counter] = 3;
     seq1[counter] = value1;
     seq2[counter] = value2;
-    counter++;
     ans[0] = -1; ans[1] = -1;
   }
   else{
@@ -196,7 +193,7 @@ int *calNAND(int value1 ,int value2){
       ans[0] = !(input1[num1] & input1[num2]);
       ans[1] = !(input2[num1] & input2[num2]);
     }
-    if(head1 == head2){
+    if(head1 == 5 && head2 == 5){
       ans[0] = !(temp1[num1] & temp1[num2]);
       ans[1] = !(temp2[num1] & temp2[num2]);
     }
@@ -222,7 +219,6 @@ int *calXOR(int value1 ,int value2){
     operator[counter] = 4;
     seq1[counter] = value1;
     seq2[counter] = value2;
-    counter++;
     ans[0] = -1; ans[1] = -1;
   }
   else{
@@ -256,7 +252,6 @@ int *calNXOR(int value1 ,int value2){
     operator[counter] = 5;
     seq1[counter] = value1;
     seq2[counter] = value2;
-    counter++;
     ans[0] = -1; ans[1] = -1;
   }
   else{
@@ -264,7 +259,7 @@ int *calNXOR(int value1 ,int value2){
       ans[0] = !(input1[num1] ^ input1[num2]);
       ans[1] = !(input2[num1] ^ input2[num2]);
     }
-    if(head1 == head2){
+    if(head1 == 5 && head2 == 5){
       ans[0] = !(temp1[num1] ^ temp1[num2]);
       ans[1] = !(temp2[num1] ^ temp2[num2]);
     }
@@ -290,7 +285,6 @@ int *calNOR(int value1 ,int value2){
     operator[counter] = 6;
     seq1[counter] = value1;
     seq2[counter] = value2;
-    counter++;
     ans[0] = -1; ans[1] = -1;
   }
   else{
@@ -298,7 +292,7 @@ int *calNOR(int value1 ,int value2){
       ans[0] = !(input1[num1] | input1[num2]);
       ans[1] = !(input2[num1] | input2[num2]);
     }
-    if(head1 == head2){
+    if(head1 == 5 && head2 == 5){
       ans[0] = !(temp1[num1] | temp1[num2]);
       ans[1] = !(temp2[num1] | temp2[num2]);
     }
@@ -310,6 +304,7 @@ int *calNOR(int value1 ,int value2){
       ans[0] = !(input1[num1] | temp1[num2]);
       ans[1] = !(input2[num1] | temp2[num2]);
     }
+  }
   return ans;
 }
 int record(int value){
@@ -320,14 +315,17 @@ int record(int value){
 void putValue(int value1){
   int head1 = number(value1);
   int num1 = number2(value1);
-  if(head1 != 4){
+  if(head1 != 4 && ans[0] != -1){
     temp1[num1] = ans[0];
     temp2[num1] = ans[1];
   }
+  if(ans[0] == -1)
+    seq3[counter] = value1;
+  counter++;
 }
 void print(){
   int counter = 0;
-  int arr1[10], arr2[10];
+  int arr1[10000], arr2[10000];
   for(int i = 0 ;; i++){
     if(counter == outputcounter)
       break;
@@ -360,6 +358,7 @@ void check(){
       case 4:calXOR(seq1[i],seq2[i]);break;
       case 5:calNXOR(seq1[i],seq2[i]);break;
       case 6:calNOR(seq1[i],seq2[i]);break;
+      putValue(seq3[i]);
     }
   }
   if(counter != 0)

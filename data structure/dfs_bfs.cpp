@@ -8,7 +8,7 @@ bool visit[10];
 void dfs(int node){
   for(int i=0;i<input[node].size();i++){
     int num = input[node][i];
-    if(visit[num] == false){
+    if(!visit[num]){
       visit[num] = true;
       DFS.push_back(num);
       dfs(num);
@@ -19,20 +19,39 @@ void travel(){
   for(int i=0;i<10;i++)
     visit[i] = false;
   for(int i=0;i<10;i++){
-    if(visit[i] == false){
+    if(!visit[i]){
       visit[i] = true;
       dfs(i);
     }
   }
 }
 void bfs(){
-
+  vector<int> vec;
+  for(int i=0;i<10;i++)
+    visit[i] = false;
+  for(int i=0;i<10;i++){
+    if(!visit[i]){
+      vec.push_back(i);
+      visit[i] = true;
+      while(!vec.empty()){
+        int num = vec.front();
+        vec.erase(vec.begin());
+        for(int i=0;i<input[num].size();i++){
+          if(!visit[input[num][i]]){
+            visit[input[num][i]] = true;
+            BFS.push_back(input[num][i]);
+            vec.push_back(input[num][i]);
+          }
+        }
+      }
+    }
+  }
 }
 void print(){
-  cout << "DFS spanning tree:"
+  cout << "DFS spanning tree:";
   for(int i=0;i<DFS.size();i++)
     cout << DFS[i];
-  cout << "\nBFS spanning tree:"
+  cout << "\nBFS spanning tree:";
   for(int i=0;i<BFS.size();i++)
     cout << BFS[i];
   cout << endl;

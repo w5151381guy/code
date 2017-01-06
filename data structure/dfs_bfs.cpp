@@ -58,14 +58,20 @@ void print(){
 }
 int main(){
   int node1,node2;
+  int min;
   cout << "input (0,0) to stop\n";
+  cin >> node1 >> node2;
+  input[node1].push_back(node2);
+  min = node1;
   while(cin >> node1 >> node2){
-	if(node1 - node2 == 0)
-		break;
+    if(min > node1)
+      min = node1;
+	  if(node1 - node2 == 0)
+		  break;
     input[node1].push_back(node2);
   }
-  DFS.push_back(0);
-  BFS.push_back(0);
+  DFS.push_back(min);
+  BFS.push_back(min);
   travel();
   bfs();
   print();

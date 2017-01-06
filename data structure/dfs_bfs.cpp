@@ -59,8 +59,11 @@ void print(){
 int main(){
   int node1,node2;
   cout << "input (0,0) to stop\n";
-  while(cin >> node1 >> node2)
+  while(cin >> node1 >> node2){
+	if(node1 - node2 == 0)
+		break;
     input[node1].push_back(node2);
+  }
   DFS.push_back(0);
   BFS.push_back(0);
   travel();

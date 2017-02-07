@@ -36,7 +36,6 @@ namespace wsTstTest
             try
             {
                 string getTNS = this._GetDb("TNS", "ORACLE");
-                //getTNS = "Data Source=w2Rd;Persist Security Info=True;User ID=db_wearo;Password=abc@123kh;Unicode=True";
                 conn.ConnectionString = getTNS;
                 OracleCommand stCMD = new OracleCommand(stWhereCommand, conn);
                 daSQL.SelectCommand = stCMD;

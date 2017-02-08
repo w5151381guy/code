@@ -105,7 +105,7 @@ namespace wsTstTest
 
         #region "副程式"
 
-        public string _GetDb(string mLabel, string mDb) //[TNS, CA2] [COMMAND, DB_ERP]
+        public string _GetDb(string mLabel, string mDb)
         {
             string mResult = string.Empty;
             DataSet ds = new DataSet();

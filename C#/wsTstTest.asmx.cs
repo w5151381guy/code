@@ -35,7 +35,7 @@ namespace wsTstTest
             OracleConnection conn = new OracleConnection();
             try
             {
-                string getTNS = this._GetDb("TNS", "ORACLE11g");
+                string getTNS = this._GetDb("TNS", "ORACLE");
                 conn.ConnectionString = getTNS;
                 OracleCommand stCMD = new OracleCommand(stWhereCommand, conn);
                 daSQL.SelectCommand = stCMD;
@@ -60,7 +60,7 @@ namespace wsTstTest
             string mConn = "";
             try
             {
-                mConn = this._GetDb("TNS", "ORACLE11g");
+                mConn = this._GetDb("TNS", "ORACLE");
                 da.Connection.ConnectionString = mConn;
                 da.Update(qDaTaSet);
                 return "OK";
@@ -88,7 +88,7 @@ namespace wsTstTest
             dsSql.Tables.Add(dtSql);
             try
             {
-                string getTNS = this._GetDb("TNS", "ORACLE11g");
+                string getTNS = this._GetDb("TNS", "ORACLE");
                 Conn.ConnectionString = getTNS;
                 cmd.CommandText = qSqlCommand;
                 cmd.Connection = Conn;

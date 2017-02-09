@@ -88,7 +88,7 @@ namespace wsTstTest
             dsSql.Tables.Add(dtSql);
             try
             {
-                string getTNS = this._GetDb("TNS", "ORACLE");
+                string getTNS = this._GetDb("TNS", "ORACLE11g");
                 Conn.ConnectionString = getTNS;
                 cmd.CommandText = qSqlCommand;
                 cmd.Connection = Conn;

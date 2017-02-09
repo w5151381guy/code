@@ -48,7 +48,7 @@ namespace wsTstTest
             }
             finally
             {
-                conn.Dispose();
+            	conn.Dispose();
                 conn.Close();
             }
         }

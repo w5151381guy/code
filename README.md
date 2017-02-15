@@ -1,25 +1,40 @@
+
 ## Algorithm  
+
 * Longest Common Sequence  
 * Linked-List(polynomial)  
-* HeapTree(max-heap tree and heapsort)  
+* HeapTree(max-heap tree and heapsort)
+
+
 ## Data Structure  
+
 * Stack(maze problem)  
 * Infix and Postfix  
 * DFS and BFS  
-## Operating System  
+
+## Operating System
+
 * Banker's Algorithm  
 * Linux Shell coding by C++  
 * OPT and LRU Algorithm  
-## Compiler  
+
+## Compiler
+
 * Yacc/Bison  
 * Lex/Flex  
+
 ## Java  
+
 * SQL connect  
 * Class exercise  
 * Object-Oriented Programming  
-## C#  
+
+## C#
+
 * WebService  
+
 ## MIPS  
+
 * Assembly code  
 
 

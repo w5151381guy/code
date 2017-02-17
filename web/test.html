@@ -19,7 +19,7 @@
     <![endif]-->
   </head>
   <body>
-    <nav class="nav navbar-inverse">
+	<nav class="nav navbar-inverse"> <!-- 黑底白字-->
     	<div class="container-fluid">
 		<div class="navbar-header">
 			<a class="navbar-brand" href="#">Brand</a>
@@ -36,21 +36,26 @@
 				</ul>
 			</li>
 		</ul>
+		<ul class="nav navbar-nav navbar-right"> <!-- 固定右上角-->
+			<li><a data-toggle="tab" href="#"><span class="glyphicon glyphicon-log-in"></span> Log in</a></li>
+			<li><a data-toggle="tab" href="#"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
+			<li><a data-toggle="tab" href="#"><span class="glyphicon glyphicon-user"></span> Admin</a></li>
+		</ul>
 	</div>
     </nav>
 
     <div class="tab-content">
 	    <div id="home" class="tab-pane fade in active">
-		    <h3>HOME</h3>
-		    <p>Some Content.</p>
+		    <h3> HOME </h3>
+		    <p>  Some Content.</p>
 	    </div>
 	    <div id="menu1" class="tab-pane fade">
-		    <h3>MENU1</h3>
-		    <p>Some Content in menu 1.</p>
+		    <h3> MENU1 </h3>
+		    <p>  Some Content in menu 1.</p>
 	    </div>
 	    <div id ="menu2" class="tab-pane fade">
-		    <h3>MENU2</h3>
-		    <p>Some Content in menu 2.</p>
+		    <h3> MENU2</h3>
+		    <p>  Some Content in menu 2.</p>
 	    </div>
     </div>
     <!-- jQuery (Bootstrap 所有外掛均需要使用) -->

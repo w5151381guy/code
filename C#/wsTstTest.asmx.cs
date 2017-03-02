@@ -39,7 +39,7 @@ namespace wsTstTest
                 conn.ConnectionString = getTNS;
                 OracleCommand stCMD = new OracleCommand(stWhereCommand, conn);
                 daSQL.SelectCommand = stCMD;
-                daSQL.Fill(ds_TstTest.Tables["TST_TEST"]);
+                daSQL.Fill(ds_TstTest.TST_TEST);
                 return ds_TstTest;
             }
             catch (Exception ex)

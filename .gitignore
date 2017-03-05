@@ -4,4 +4,5 @@ lex.yy.c
 makefile
 input
 test
-image/
+*.jpg
+*.png

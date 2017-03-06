@@ -7,12 +7,10 @@ img2 = cv2.imread('lena.png',0)   #readimage in grayscale
 #display image in RGB
 cv2.imshow('image1',img1)
 cv2.waitKey(0)
-cv2.destroyAllWindows()
 
 #display image in grayscale
 cv2.imshow('image2',img2)
 cv2.waitKey(0)
-cv2.destroyAllWindows()
 
 #user input
 value = int(input("Please input value to add or substract: "))
@@ -39,7 +37,6 @@ for i in range(0,height,+1):
 #display after calculate
 cv2.imshow('After_image1',img1)
 cv2.waitKey(0)
-cv2.destroyAllWindows()
 
 cv2.imshow('After_image2',img2)
 cv2.waitKey(0)

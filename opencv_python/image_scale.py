@@ -15,8 +15,8 @@ cv2.destroyAllWindows()
 
 #global variable
 row,col,pix = img.shape
-zoom_x = 1.2
-zoom_y = 1.2
+zoom_x = 2
+zoom_y = 3
 row1 = int(row*zoom_y)
 col1 = int(col*zoom_x)
 
@@ -37,15 +37,17 @@ f(x,y) = f1(x,y) + d2*[f2(x,y)-f1(x,y)]
 linear = np.zeros([row1,col1,pix],np.uint8)
 for j in range(0,row1,+1):
     #y-axis rounding
+    jj = int(j/zoom_y)
     j1 = int(j/zoom_y - 0.5)
     j2 = int(j/zoom_y + 0.5)
     for i in range(0,col1,+1):
         #x-axis rounding
+        ii = int(i/zoom_x)
         i1 = int(i/zoom_x - 0.5)
         i2 = int(i/zoom_x + 0.5)
-        f1 = img[j1,i1] + (i-i1)*(img[j1,i2]-img[j1,i1])
-        f2 = img[j2,i1] + (i-i1)*(img[j2,i2]-img[j2,i1])
-        linear[j,i] = f1 + (j-j1)*(f2-f1)
+        f1 = img[j1,i1] + (ii-i1)*(img[j1,i2]-img[j1,i1])
+        f2 = img[j2,i1] + (ii-i1)*(img[j2,i2]-img[j2,i1])
+        linear[j,i] = f1 + (jj-j1)*(f2-f1)
 
 #show image
 cv2.imshow('after_scale_nearest',nearest)

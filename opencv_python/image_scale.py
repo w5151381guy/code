@@ -6,11 +6,12 @@ cv2.imshow('original_image',img)
 cv2.waitKey(0)
 
 #image scaling
-img_api = cv2.resize(img, None, fx = 1.2, fy = 1.2, interpolation = cv2.INTER_CUBIC)
-img_ner = cv2.resize(img, None, fx = 1.2, fy = 1.2, interpolation = cv2.INTER_NEAREST)
-cv2.imshow('after_scaling_usingAPI(cubic)',img_api)
-cv2.imshow('after_scaling_usingAPI(nearest)',img_ner)
+img_linear = cv2.resize(img, None, fx = 1.2, fy = 1.2, interpolation = cv2.INTER_LINEAR)
+img_nearest = cv2.resize(img, None, fx = 1.2, fy = 1.2, interpolation = cv2.INTER_NEAREST)
+cv2.imshow('after_scaling_usingAPI(linear)',img_linearest)
+cv2.imshow('after_scaling_usingAPI(nearest)',img_nearest)
 cv2.waitKey(0)
+cv2.destroyAllWindows()
 
 #Bilinear
 '''

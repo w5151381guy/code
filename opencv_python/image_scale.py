@@ -7,7 +7,9 @@ cv2.waitKey(0)
 
 #image scaling
 img_api = cv2.resize(img, None, fx = 1.2, fy = 1.2, interpolation = cv2.INTER_CUBIC)
-cv2.imshow('after_scaling_usingAPI',img_api)
+img_ner = cv2.resize(img, None, fx = 1.2, fy = 1.2, interpolation = cv2.INTER_NEAREST)
+cv2.imshow('after_scaling_usingAPI(cubic)',img_api)
+cv2.imshow('after_scaling_usingAPI(nearest)',img_ner)
 cv2.waitKey(0)
 
 #Bilinear

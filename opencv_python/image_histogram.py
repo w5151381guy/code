@@ -42,11 +42,12 @@ histogram_image_output = np.zeros(256,np.int)
 for i in range(0,height):
     for j in range(0,width):
         gray_pixel = img[i][j]
-        histogram_image_output[gray_pixel] += 1
+        final_img[i][j] = equalization[gray_pixel]
+
 for i in range(0,height):
     for j in range(0,width):
-        gray_pixel = img[i][j]
-        final_img[i][j] = equalization[gray_pixel]
+        gray_pixel = final_img[i][j]
+        histogram_image_output[gray_pixel] += 1
 
 plt.figure('output image histogram')
 plt.plot(histogram_image,histogram_image_output)

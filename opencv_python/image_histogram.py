@@ -28,9 +28,22 @@ cumulative[0] = histogram[0]
 for i in range(0,256):
     cumulative[i] = cumulative[i - 1] + histogram[i]
 
+#equalization
+'''
+h(v) = round(255 *cdf(v) / image_size)
+'''
+equalization = np.zeros(256,np.int)
+for i in range(0,256):
+    equalization[i] = np.round((255 * cumulative[i]) / img.size)
+
+plt.figure('equalization')
+plt.plot(histogram_image,equalization)
+plt.show()
+
 #numpy implementation
 cdf = hist.cumsum()
 cdf_normalized = cdf * hist.max() / cdf.max()
+plt.figure('histogram and cumulative distribution function')
 plt.plot(cdf_normalized, color = 'b')
 plt.hist(img.flatten(),256,[0,256],color = 'r')
 plt.xlim([0,256])

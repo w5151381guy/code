@@ -11,7 +11,7 @@ histogram_image = np.zeros(256,np.int)
 for i in range(0,256):
     histogram_image[i] = i
 
-#histogram(calculate gray pixel)
+#histogram(calculate how many gray pixel are there)
 histogram = np.zeros(256,np.int)
 for i in range(0,height):
     for j in range(0,width):
@@ -21,6 +21,12 @@ for i in range(0,height):
 plt.figure('Original_image_histogram')
 plt.plot(histogram_image,histogram)
 plt.show()
+
+#cumulative distributive function
+cumulative = np.zeros(256,np.int)
+cumulative[0] = histogram[0]
+for i in range(0,256):
+    cumulative[i] = cumulative[i - 1] + histogram[i]
 
 #numpy implementation
 cdf = hist.cumsum()

@@ -28,6 +28,16 @@ cumulative[0] = histogram[0]
 for i in range(0,256):
     cumulative[i] = cumulative[i - 1] + histogram[i]
 
+#numpy implementation
+cdf = hist.cumsum()
+cdf_normalized = cdf * hist.max() / cdf.max()
+plt.figure('histogram and cumulative distribution function')
+plt.plot(cdf_normalized, color = 'b')
+plt.hist(img.flatten(),256,[0,256],color = 'r')
+plt.xlim([0,256])
+plt.legend(('cdf','histogram'),loc = 'upper left')
+plt.show()
+
 #equalization
 '''
 h(v) = round(255 *cdf(v) / image_size)
@@ -56,16 +66,6 @@ plt.show()
 cv2.imshow('final image',final_img)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
-
-#numpy implementation
-cdf = hist.cumsum()
-cdf_normalized = cdf * hist.max() / cdf.max()
-plt.figure('histogram and cumulative distribution function')
-plt.plot(cdf_normalized, color = 'b')
-plt.hist(img.flatten(),256,[0,256],color = 'r')
-plt.xlim([0,256])
-plt.legend(('cdf','histogram'),loc = 'upper left')
-plt.show()
 
 #histogram equalization
 equ = cv2.equalizeHist(img)

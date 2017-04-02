@@ -3,7 +3,24 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 img = cv2.imread('lena.png',0)
+
+#global variable
 hist,bins = np.histogram(img.flatten(),256,[0,256])
+height,width = img.shape
+histogram_image = np.zeros(256,np.int)
+for i in range(0,256):
+    histogram_image[i] = i
+
+#histogram(calculate gray pixel)
+histogram = np.zeros(256,np.int)
+for i in range(0,height):
+    for j in range(0,width):
+        gray_pixel = img[i][j]
+        histogram[gray_pixel] += 1
+
+plt.figure('Original_image_histogram')
+plt.plot(histogram_image,histogram)
+plt.show()
 
 #numpy implementation
 cdf = hist.cumsum()

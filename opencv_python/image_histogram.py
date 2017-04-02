@@ -36,9 +36,25 @@ equalization = np.zeros(256,np.int)
 for i in range(0,256):
     equalization[i] = np.round((255 * cumulative[i]) / img.size)
 
-plt.figure('equalization')
-plt.plot(histogram_image,equalization)
+#output image
+final_img = np.zeros((height,width),np.uint8)
+histogram_image_output = np.zeros(256,np.int)
+for i in range(0,height):
+    for j in range(0,width):
+        gray_pixel = img[i][j]
+        histogram_image_output[gray_pixel] += 1
+for i in range(0,height):
+    for j in range(0,width):
+        gray_pixel = img[i][j]
+        final_img[i][j] = equalization[gray_pixel]
+
+plt.figure('output image histogram')
+plt.plot(histogram_image,histogram_image_output)
 plt.show()
+
+cv2.imshow('final image',final_img)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
 
 #numpy implementation
 cdf = hist.cumsum()

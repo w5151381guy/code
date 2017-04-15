@@ -22,3 +22,10 @@ cv2.imshow('Sobelx',sobelx)
 cv2.imshow('Sobely',sobely)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
+
+#canny edge detection
+img2 = cv2.imread('lena.png',0)
+edge = cv2.Canny(img2,100,200)
+cv2.imshow('Canny Edge Detection',edge)
+cv2.waitKey(0)
+cv2.destroytAllWindows()

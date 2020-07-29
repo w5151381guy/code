@@ -36,7 +36,7 @@
 * CSS  
 * JavaScript  
 
-##OpenCV For Python  
+## OpenCV For Python  
 * Image Processing 
 
 ## C#  
